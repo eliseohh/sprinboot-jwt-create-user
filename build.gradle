@@ -28,6 +28,12 @@ dependencies {
 			'org.codehaus.groovy:groovy-all:2.4.4',
 			'org.spockframework:spock-core:1.0-groovy-2.4'
 	)
+
+	compileOnly 'org.projectlombok:lombok:1.18.16'
+	annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+	testCompileOnly 'org.projectlombok:lombok:1.18.16'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 test {
