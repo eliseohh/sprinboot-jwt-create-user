@@ -8,6 +8,7 @@ import com.eliseo.user.dto.UserResponseDTO;
 import com.eliseo.user.repository.UserRepository;
 import com.eliseo.user.service.UserService;
 import com.eliseo.user.utils.TokenManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
+
     /**
      * regex validation here: https://emailregex.com/
      */
@@ -39,24 +42,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<Object> saveUser(UserRequestDTO userRequestDTO) {
+    public ResponseEntity saveUser(UserRequestDTO userRequestDTO) {
+        log.info("[INIT] start to saving user");
         Pattern mailPattern = Pattern.compile(MAIL_REGEX_VALIDATOR);
         Matcher mailMatcher = mailPattern.matcher(userRequestDTO.getEmail());
         Pattern passwordPattern = Pattern.compile(PASSWORD_REGEX_VALIDATOR);
         Matcher passwordMatcher = passwordPattern.matcher(userRequestDTO.getPassword());
 
         if (!mailMatcher.matches()) {
+            log.error("[FIN_EX] mail is invalid: {}", userRequestDTO.getEmail());
             return ResponseEntity.badRequest().body(new MessageDTO("Correo invalido"));
         }
 
         if (!passwordMatcher.find()) {
+            log.error("[FIN_EX] password doesn't match: {}", userRequestDTO.getPassword());
             return ResponseEntity.badRequest().body(new MessageDTO("Contrasenha no ad hoc con lo requerido"));
         }
 
         if (userRepository.existsByEmail(userRequestDTO.getEmail())){
+            //TODO: se debería retornar el email ya tomado? consultar
+            log.error("[FIN_EX] mail already taken");
             return ResponseEntity.unprocessableEntity().body(new MessageDTO("El correo ya registrado"));
         }
 
+        log.info("creating user");
         User user = User.builder()
                 .email(userRequestDTO.getEmail())
                 .name(userRequestDTO.getName())
@@ -74,7 +83,9 @@ public class UserServiceImpl implements UserService {
                         .collect(Collectors.toList()))
                 .build();
 
+        log.info("saving user");
         userRepository.save(user);
+        log.info("saving ok");
 
         UserResponseDTO userResponseDTO = UserResponseDTO.builder()
                 .Id(user.getId())
@@ -85,6 +96,7 @@ public class UserServiceImpl implements UserService {
                 .isActive(user.isActive())
                 .build();
 
+        log.info("[FIN_OK] finish to saving and returning new   user");
         return ResponseEntity.ok(userResponseDTO);
     }
 }
