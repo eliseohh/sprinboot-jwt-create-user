@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity saveUser(UserRequestDTO userRequestDTO) {
+    public ResponseEntity<Object> saveUser(UserRequestDTO userRequestDTO) {
         Pattern mailPattern = Pattern.compile(MAIL_REGEX_VALIDATOR);
         Matcher mailMatcher = mailPattern.matcher(userRequestDTO.getEmail());
         Pattern passwordPattern = Pattern.compile(PASSWORD_REGEX_VALIDATOR);
