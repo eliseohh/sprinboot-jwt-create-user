@@ -1,7 +1,14 @@
 package com.eliseo.user.repository;
 
-import com.eliseo.user.domain.UserRegister;
+import com.eliseo.user.domain.User;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends CrudRepository<UserRegister, Long> {
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends CrudRepository<User, Long> {
+    Optional<User> findByEmail(String email);
+
+    Boolean existsByEmail(String email);
 }

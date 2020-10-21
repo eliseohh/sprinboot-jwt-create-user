@@ -1,13 +1,13 @@
 package com.eliseo.user.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
-@Setter
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
     private String name;

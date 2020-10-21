@@ -4,5 +4,5 @@ import com.eliseo.user.dto.UserRequestDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    ResponseEntity<String> saveUser(UserRequestDTO userRequestDTO);
+    ResponseEntity saveUser(UserRequestDTO userRequestDTO);
 }
